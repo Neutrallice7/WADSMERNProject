@@ -15,7 +15,9 @@ const MainNavigation = (props) => {
       <h1 className="main-navigation__title">
         <Link to="/">YourPlaces</Link>
       </h1>
-      <nav><NavLinks/></nav>
+      <nav>
+        <NavLinks />
+      </nav>
     </MainHeader>
   );
 };
