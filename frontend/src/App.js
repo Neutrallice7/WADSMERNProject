@@ -8,6 +8,7 @@ import {
 
 import Users from './user/pages/Users';
 import NewPlace from './places/pages/NewPlace';
+import UserPlaces from './places/pages/UserPlaces';
 import MainNavigation from './shared/components/Navigation/MainNavigation';
 
 const App = () => {
@@ -20,6 +21,10 @@ const App = () => {
           {/* The root, to users */}
           <Route path="/" exact>
             <Users />
+          </Route>
+          {/* Route to the user's places */}
+          <Route path="/:userId/places" exact>
+            <UserPlaces />
           </Route>
           {/* Routing towards places */}
           <Route path="/places/new" exact>
