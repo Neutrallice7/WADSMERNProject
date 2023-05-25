@@ -9,13 +9,17 @@ const UserItem = props => {
   return (
     <li className="user-item">
       <Card className="user-item__content">
+        {/* Redirects to /place using said id */}
         <Link to={`/${props.id}/places`}>
           <div className="user-item__image">
+            {/* Displays the avatar image */}
             <Avatar image={props.image} alt={props.name} />
           </div>
           <div className="user-item__info">
+            {/* Shows the user name */}
             <h2>{props.name}</h2>
             <h3>
+              {/* Shows place count */}
               {props.placeCount} {props.placeCount === 1 ? 'Place' : 'Places'}
             </h3>
           </div>

@@ -5,6 +5,7 @@ import './Avatar.css';
 const Avatar = props => {
   return (
     <div className={`avatar ${props.className}`} style={props.style}>
+      {/* Avatar image basically */}
       <img
         src={props.image}
         alt={props.alt}

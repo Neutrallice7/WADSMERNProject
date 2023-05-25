@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 
 import './SideDrawer.css';
 
+// Draw the side draw for mobile
 const SideDrawer = props => {
   const content = <aside className="side-drawer">{props.children}</aside>;
 

@@ -2,6 +2,7 @@ import React from 'react';
 
 import UsersList from '../components/UsersList';
 
+// Users and their data
 const Users = () => {
   const USERS = [
     {
