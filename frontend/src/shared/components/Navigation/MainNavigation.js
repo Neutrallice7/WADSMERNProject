@@ -1,11 +1,12 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import MainHeader from "./MainHeader";
-import NavLinks from "./NavLinks";
-import SideDrawer from "./SideDrawer";
-import "./MainNavigation.css";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-const MainNavigation = (props) => {
+import MainHeader from './MainHeader';
+import NavLinks from './NavLinks';
+import SideDrawer from './SideDrawer';
+import './MainNavigation.css';
+
+const MainNavigation = props => {
   return (
     <React.Fragment>
       <SideDrawer>
@@ -14,7 +15,7 @@ const MainNavigation = (props) => {
         </nav>
       </SideDrawer>
       <MainHeader>
-        <button>
+        <button className="main-navigation__menu-btn">
           <span />
           <span />
           <span />
