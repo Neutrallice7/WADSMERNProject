@@ -1,7 +1,7 @@
 import { useCallback, useReducer } from "react";
 
 
-// Hooks
+// Hooks so that NewPlace and UpdatePlace can use the same form
 const formReducer = (state, action) => {
   switch (action.type) {
     case "INPUT_CHANGE":
