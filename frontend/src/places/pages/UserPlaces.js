@@ -18,7 +18,7 @@ const DUMMY_PLACES = [
     },
     {
         id:'p2',
-        title: 'Empire State Building',
+        title: 'Emp. State Building',
         description: 'Skyscraper wow',
         imageUrl: 'https://fthmb.tqn.com/sBI2W7YNV4vRSVdbRVfASLH3F6I=/2617x3874/filters:fill(auto,1)/5891665274_cc93622eb7_o-56a3ff3b5f9b58b7d0d4df13.jpg',
         address: '20 W 34th St, New York, NY 10118',
