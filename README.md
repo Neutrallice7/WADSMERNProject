@@ -1,7 +1,7 @@
 # LocaGO Project
 
 ## ABOUT
-Welcome to LocaGO, a cutting-edge location-based travel sharing web application created with the MERN stack. We want to connect travelers from all over the world by making it easier to share places, experiences, and thoughts. We want to provide a platform where users can learn about new locations, conveniently organize their travels, and communicate with other travelers from across the world about their experiences.
+Welcome to LocaGO, a location travel sharing web application created with the MERN stack. We want to connect travelers from all over the world by making it easier to share places, experiences, and thoughts. We want to provide a platform where users can learn about new locations, conveniently organize their travels, and communicate with other travelers from across the world about their experiences.
 
 ## Project Members
 * Dafa Ramadhan Syaidina
