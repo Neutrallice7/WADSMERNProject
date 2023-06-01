@@ -80,7 +80,7 @@ const Auth = () => {
             onInput={inputHandler}
           />
         )}
-        // Render email and password input fields in both login and signup modes
+        {/*Render email and password input fields in both login and signup modes*/}
         <Input
           element="input"
           id="email"

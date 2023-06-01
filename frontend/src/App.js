@@ -1,35 +1,32 @@
-import React from "react";
-import {
-  BrowserRouter as Router,
-  Route,
-  Redirect,
-  Switch,
-} from "react-router-dom";
+import React, { useState, useCallback } from 'react';
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 
-import Users from "./user/pages/Users";
-import NewPlace from "./places/pages/NewPlace";
-import UserPlaces from "./places/pages/UserPlaces";
-import UpdatePlace from "./places/pages/UpdatePlace";
-import MainNavigation from "./shared/components/Navigation/MainNavigation";
-import { AuthContext } from "./shared/context/auth-context";
-import Auth from "./user/pages/Auth";
+import Users from './user/pages/Users';
+import NewPlace from './places/pages/NewPlace';
+import UserPlaces from './places/pages/UserPlaces';
+import UpdatePlace from './places/pages/UpdatePlace';
+import Auth from './user/pages/Auth';
+import MainNavigation from './shared/components/Navigation/MainNavigation';
+import { AuthContext } from './shared/context/auth-context';
 
 const App = () => {
+  // State for user authentication
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Callback functions for login and logout actions
+  // Login handler
   const login = useCallback(() => {
     setIsLoggedIn(true);
   }, []);
 
+  // Logout handler
   const logout = useCallback(() => {
     setIsLoggedIn(false);
   }, []);
 
   let routes;
 
+  // Conditional rendering of routes based on user authentication
   if (isLoggedIn) {
-    // Routes for logged-in users
     routes = (
       <Switch>
         <Route path="/" exact>
@@ -48,7 +45,6 @@ const App = () => {
       </Switch>
     );
   } else {
-    // Routes for non-logged-in users
     routes = (
       <Switch>
         <Route path="/" exact>
@@ -66,12 +62,10 @@ const App = () => {
   }
 
   return (
-    <AuthContext.Provider
-      value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }} // Context values for authentication
-    >
+    <AuthContext.Provider value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}>
       <Router>
-        <MainNavigation /> {/* Navigation component */}
-        <main>{routes}</main> {/* Rendered routes */}
+        <MainNavigation />
+        <main>{routes}</main>
       </Router>
     </AuthContext.Provider>
   );

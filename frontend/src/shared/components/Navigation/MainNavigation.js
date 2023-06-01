@@ -37,7 +37,7 @@ const MainNavigation = props => {
         </button>
         {/* If the user clicks this, redirects them to / or root */}
         <h1 className="main-navigation__title">
-          <Link to="/">YourPlaces</Link>
+          <Link to="/">LocaGO</Link>
         </h1>
         <nav className="main-navigation__header-nav">
           {/* Buttons to redirect users */}

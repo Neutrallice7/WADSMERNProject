@@ -7,10 +7,10 @@ const Users = () => {
   const USERS = [
     {
       id: 'u1',
-      name: 'Max Schwarz',
+      name: 'Dafa Syaidina',
       image:
-        'https://images.pexels.com/photos/839011/pexels-photo-839011.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-      places: 3
+        'https://i.pinimg.com/736x/0a/77/ab/0a77ab9b741887432031c9d0670ac3f3.jpg',
+      places: 2
     }
   ];
 

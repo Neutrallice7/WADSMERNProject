@@ -17,13 +17,13 @@
 
 .button:hover,
 .button:active {
-  background: #ff4382;
-  border-color: #ff4382;
+  background: #ff2d55;
+  border-color: #ff2d55;
 }
 
 .button--inverse {
   background: transparent;
-  color: #ff0055;
+  color: #ff2d55;
 }
 
 .button--inverse:hover,
@@ -33,14 +33,14 @@
 }
 
 .button--danger {
-  background: #830000;
-  border-color: #830000;
+  background: #ff453a;
+  border-color: #ff453a;
 }
 
 .button--danger:hover,
 .button--danger:active {
-  background: #f34343;
-  border-color: #f34343;
+  background: #D70015;
+  border-color: #D70015;
 }
 
 .button:disabled,
