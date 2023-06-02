@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const placesRoutes = require('./routes/places-routes');
 const usersRoutes = require('./routes/users-routes');
@@ -28,4 +29,11 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || 'An unknown error occurred!' });
 });
 
-app.listen(5000); // Start the server
+mongoose // Connect to the MongoDB database using the provided connection string
+  .connect('mongodb+srv://gloobe3:Daffasyaidina89@custard.le00nl1.mongodb.net/places')
+  .then(() => {
+    app.listen(5000); // Start the server once the database connection is ready
+  })
+  .catch(err => {
+    console.log(err);
+  });
