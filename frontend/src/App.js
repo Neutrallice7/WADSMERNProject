@@ -1,5 +1,10 @@
 import React, { useState, useCallback } from 'react';
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Route,
+  Redirect,
+  Switch
+} from 'react-router-dom';
 
 import Users from './user/pages/Users';
 import NewPlace from './places/pages/NewPlace';
@@ -10,22 +15,25 @@ import MainNavigation from './shared/components/Navigation/MainNavigation';
 import { AuthContext } from './shared/context/auth-context';
 
 const App = () => {
-  // State for user authentication
+  // Set initial state for user authentication
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState(false);
 
-  // Login handler
-  const login = useCallback(() => {
+  // Login function to update authentication state
+  const login = useCallback(uid => {
     setIsLoggedIn(true);
+    setUserId(uid);
   }, []);
 
-  // Logout handler
+  // Logout function to update authentication state
   const logout = useCallback(() => {
     setIsLoggedIn(false);
+    setUserId(null);
   }, []);
 
   let routes;
 
-  // Conditional rendering of routes based on user authentication
+  // Define routes based on user authentication status
   if (isLoggedIn) {
     routes = (
       <Switch>
@@ -62,7 +70,14 @@ const App = () => {
   }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn: isLoggedIn, login: login, logout: logout }}>
+    <AuthContext.Provider
+      value={{
+        isLoggedIn: isLoggedIn,
+        userId: userId,
+        login: login,
+        logout: logout
+      }}
+    >
       <Router>
         <MainNavigation />
         <main>{routes}</main>

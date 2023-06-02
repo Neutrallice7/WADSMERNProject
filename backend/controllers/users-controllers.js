@@ -7,7 +7,7 @@ const User = require('../models/user');
 const getUsers = async (req, res, next) => {
   let users;
   try {
-    users = await User.find({}, '-password'); // Excluding the 'password' field from the returned users
+    users = await User.find({}, '-password');
   } catch (err) {
     const error = new HttpError(
       'Fetching users failed, please try again later.',
@@ -15,7 +15,7 @@ const getUsers = async (req, res, next) => {
     );
     return next(error);
   }
-  res.json({ users: users.map(user => user.toObject({ getters: true })) }); // Converting users to plain objects
+  res.json({ users: users.map(user => user.toObject({ getters: true })) });
 };
 
 // Handler for user signup
@@ -50,7 +50,7 @@ const signup = async (req, res, next) => {
   const createdUser = new User({
     name,
     email,
-    image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0Md-CewELZVMuzGVtm4lJKagHG8YlA0c1w9VstwCpjZr38qdhbdESgLt-8maVPlMCSEE&usqp=CAU',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png',
     password,
     places: []
   });
@@ -59,13 +59,13 @@ const signup = async (req, res, next) => {
     await createdUser.save();
   } catch (err) {
     const error = new HttpError(
-      'Signing up failed, please try again.',
+      'Signing up failed, please try again later.',
       500
     );
     return next(error);
   }
 
-  res.status(201).json({ user: createdUser.toObject({ getters: true }) }); // Converting the created user to a plain object
+  res.status(201).json({ user: createdUser.toObject({ getters: true }) });
 };
 
 // Handler for user login
@@ -92,7 +92,10 @@ const login = async (req, res, next) => {
     return next(error);
   }
 
-  res.json({ message: 'Logged in!' }); // return a success message in the response
+  res.json({
+    message: 'Logged in!',
+    user: existingUser.toObject({ getters: true })
+  });
 };
 
 exports.getUsers = getUsers;

@@ -1,40 +1,50 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import PlaceList from '../Components/PlaceList';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 
-const DUMMY_PLACES = [
-    {
-        id:'p1',
-        title: 'Empire State Building',
-        description: 'Skyscraper wow',
-        imageUrl: 'https://fthmb.tqn.com/sBI2W7YNV4vRSVdbRVfASLH3F6I=/2617x3874/filters:fill(auto,1)/5891665274_cc93622eb7_o-56a3ff3b5f9b58b7d0d4df13.jpg',
-        address: '20 W 34th St, New York, NY 10118',
-        location: {
-            lat: 40.748659926512545,
-            lng: -73.98567513234116
-        },
-        creator: 'u1'
-    },
-    {
-        id:'p2',
-        title: 'Emp. State Building',
-        description: 'Skyscraper wow',
-        imageUrl: 'https://fthmb.tqn.com/sBI2W7YNV4vRSVdbRVfASLH3F6I=/2617x3874/filters:fill(auto,1)/5891665274_cc93622eb7_o-56a3ff3b5f9b58b7d0d4df13.jpg',
-        address: '20 W 34th St, New York, NY 10118',
-        location: {
-            lat: 40.748659926512545,
-            lng: -73.98567513234116
-        },
-        creator: 'u2'
-    }
-];
-
+// Component for displaying places of a specific user
 const UserPlaces = () => {
-    // Filtering user ids and the places
-    const userId = useParams().userId;
-    const loadedPlaces = DUMMY_PLACES.filter(place => place.creator === userId);
-    return <PlaceList items={loadedPlaces} />;
+  const [loadedPlaces, setLoadedPlaces] = useState();
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
+  const userId = useParams().userId;
+
+  useEffect(() => {
+    const fetchPlaces = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/places/user/${userId}`
+        );
+        setLoadedPlaces(responseData.places);
+      } catch (err) {}
+    };
+    fetchPlaces();
+  }, [sendRequest, userId]);
+
+  // Handler for deleting a place
+  const placeDeletedHandler = deletedPlaceId => {
+    setLoadedPlaces(prevPlaces =>
+      prevPlaces.filter(place => place.id !== deletedPlaceId)
+    );
+  };
+
+  return (
+    <React.Fragment>
+      <ErrorModal error={error} onClear={clearError} />
+      {isLoading && (
+        <div className="center">
+          <LoadingSpinner />
+        </div>
+      )}
+      {!isLoading && loadedPlaces && (
+        <PlaceList items={loadedPlaces} onDeletePlace={placeDeletedHandler} />
+      )}
+    </React.Fragment>
+  );
 };
 
 export default UserPlaces;

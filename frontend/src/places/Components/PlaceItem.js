@@ -4,42 +4,54 @@ import Card from '../../shared/components/UIElements/Card';
 import Button from '../../shared/components/FormElements/Button';
 import Modal from '../../shared/components/UIElements/Modal';
 import Map from '../../shared/components/UIElements/Map';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal';
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { AuthContext } from '../../shared/context/auth-context';
+import { useHttpClient } from '../../shared/hooks/http-hook';
 import './PlaceItem.css';
 
-const PlaceItem = props => {
-  // Accessing the auth context
+// Component for rendering an individual place item
+const PlaceItem = (props) => {
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const auth = useContext(AuthContext);
-
-  // State variables for showing/hiding the map and confirm delete modal
   const [showMap, setShowMap] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  // Event handler for opening the map modal
-  const openMapHandler = () => setShowMap(true);
+  // Handler for opening the map modal
+  const openMapHandler = () => {
+    setShowMap(true);
+  };
 
-  // Event handler for closing the map modal
-  const closeMapHandler = () => setShowMap(false);
+  // Handler for closing the map modal
+  const closeMapHandler = () => {
+    setShowMap(false);
+  };
 
-  // Event handler for showing the delete confirmation modal
+  // Handler for showing the delete confirmation modal
   const showDeleteWarningHandler = () => {
     setShowConfirmModal(true);
   };
 
-  // Event handler for canceling the delete operation
+  // Handler for cancelling the delete action
   const cancelDeleteHandler = () => {
     setShowConfirmModal(false);
   };
 
-  // Event handler for confirming the delete operation
-  const confirmDeleteHandler = () => {
+  // Handler for confirming the delete action
+  const confirmDeleteHandler = async () => {
     setShowConfirmModal(false);
-    console.log('DELETING...');
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/places/${props.id}`,
+        'DELETE'
+      );
+      props.onDelete(props.id);
+    } catch (err) {}
   };
 
   return (
     <React.Fragment>
-      {/* Map Modal */}
+      <ErrorModal error={error} onClear={clearError} />
       <Modal
         show={showMap}
         onCancel={closeMapHandler}
@@ -52,8 +64,6 @@ const PlaceItem = props => {
           <Map center={props.coordinates} zoom={16} />
         </div>
       </Modal>
-
-      {/* Delete Confirmation Modal */}
       <Modal
         show={showConfirmModal}
         onCancel={cancelDeleteHandler}
@@ -71,13 +81,13 @@ const PlaceItem = props => {
         }
       >
         <p>
-          Do you want to proceed and delete this place? Please note that it can't be undone thereafter.
+          Do you want to proceed and delete this place? Please note that it
+          can't be undone thereafter.
         </p>
       </Modal>
-
-      {/* Place Item */}
       <li className="place-item">
         <Card className="place-item__content">
+          {isLoading && <LoadingSpinner asOverlay />}
           <div className="place-item__image">
             <img src={props.image} alt={props.title} />
           </div>
@@ -87,18 +97,13 @@ const PlaceItem = props => {
             <p>{props.description}</p>
           </div>
           <div className="place-item__actions">
-            {/* View on Map button */}
             <Button inverse onClick={openMapHandler}>
               VIEW ON MAP
             </Button>
-
-            {/* Edit button (visible if user is logged in) */}
-            {auth.isLoggedIn && (
+            {auth.userId === props.creatorId && (
               <Button to={`/places/${props.id}`}>EDIT</Button>
             )}
-
-            {/* Delete button (visible if user is logged in) */}
-            {auth.isLoggedIn && (
+            {auth.userId === props.creatorId && (
               <Button danger onClick={showDeleteWarningHandler}>
                 DELETE
               </Button>
