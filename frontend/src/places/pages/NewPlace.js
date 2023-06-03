@@ -16,8 +16,11 @@ import { AuthContext } from '../../shared/context/auth-context';
 import './PlaceForm.css';
 
 const NewPlace = () => {
+  // Access the auth context and HTTP client hook
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
+
+  // Initialize form state and input handler
   const [formState, inputHandler] = useForm(
     {
       title: {
@@ -42,16 +45,22 @@ const NewPlace = () => {
 
   const history = useHistory();
 
+  // Submit handler for creating a new place
   const placeSubmitHandler = async event => {
     event.preventDefault();
     try {
+      // Create a new FormData object and append form data
       const formData = new FormData();
       formData.append('title', formState.inputs.title.value);
       formData.append('description', formState.inputs.description.value);
       formData.append('address', formState.inputs.address.value);
       formData.append('creator', auth.userId);
       formData.append('image', formState.inputs.image.value);
+
+      // Send a POST request to create a new place
       await sendRequest('http://localhost:5000/api/places', 'POST', formData);
+
+      // Redirect to the home page
       history.push('/');
     } catch (err) {}
   };

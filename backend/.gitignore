@@ -21,4 +21,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+/uploads/images/*.jpg
+/uploads/images/*.jpeg
+/uploads/images/*.png
+/uploads/images/*.gif
+/uploads/images/.gitkeep
 

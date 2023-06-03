@@ -6,6 +6,7 @@ import Button from '../../shared/components/FormElements/Button';
 import './PlaceList.css';
 
 const PlaceList = props => {
+  // Render a message if there are no places
   if (props.items.length === 0) {
     return (
       <div className="place-list center">
@@ -17,6 +18,7 @@ const PlaceList = props => {
     );
   }
 
+  // Render the list of places
   return (
     <ul className="place-list">
       {props.items.map(place => (
