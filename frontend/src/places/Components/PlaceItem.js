@@ -10,34 +10,24 @@ import { AuthContext } from '../../shared/context/auth-context';
 import { useHttpClient } from '../../shared/hooks/http-hook';
 import './PlaceItem.css';
 
-// Component for rendering an individual place item
-const PlaceItem = (props) => {
+const PlaceItem = props => {
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const auth = useContext(AuthContext);
   const [showMap, setShowMap] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  // Handler for opening the map modal
-  const openMapHandler = () => {
-    setShowMap(true);
-  };
+  const openMapHandler = () => setShowMap(true);
 
-  // Handler for closing the map modal
-  const closeMapHandler = () => {
-    setShowMap(false);
-  };
+  const closeMapHandler = () => setShowMap(false);
 
-  // Handler for showing the delete confirmation modal
   const showDeleteWarningHandler = () => {
     setShowConfirmModal(true);
   };
 
-  // Handler for cancelling the delete action
   const cancelDeleteHandler = () => {
     setShowConfirmModal(false);
   };
 
-  // Handler for confirming the delete action
   const confirmDeleteHandler = async () => {
     setShowConfirmModal(false);
     try {
@@ -48,6 +38,8 @@ const PlaceItem = (props) => {
       props.onDelete(props.id);
     } catch (err) {}
   };
+
+  console.log(props.image)
 
   return (
     <React.Fragment>
@@ -89,7 +81,7 @@ const PlaceItem = (props) => {
         <Card className="place-item__content">
           {isLoading && <LoadingSpinner asOverlay />}
           <div className="place-item__image">
-            <img src={props.image} alt={props.title} />
+          <img src={`http://localhost:5000/${props.image}`} alt={props.title} />
           </div>
           <div className="place-item__info">
             <h2>{props.title}</h2>
@@ -103,6 +95,7 @@ const PlaceItem = (props) => {
             {auth.userId === props.creatorId && (
               <Button to={`/places/${props.id}`}>EDIT</Button>
             )}
+
             {auth.userId === props.creatorId && (
               <Button danger onClick={showDeleteWarningHandler}>
                 DELETE

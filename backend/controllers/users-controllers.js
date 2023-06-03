@@ -3,7 +3,6 @@ const { validationResult } = require('express-validator');
 const HttpError = require('../models/http-error');
 const User = require('../models/user');
 
-// Handler for fetching all users
 const getUsers = async (req, res, next) => {
   let users;
   try {
@@ -18,7 +17,6 @@ const getUsers = async (req, res, next) => {
   res.json({ users: users.map(user => user.toObject({ getters: true })) });
 };
 
-// Handler for user signup
 const signup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -26,6 +24,7 @@ const signup = async (req, res, next) => {
       new HttpError('Invalid inputs passed, please check your data.', 422)
     );
   }
+
   const { name, email, password } = req.body;
 
   let existingUser;
@@ -50,9 +49,9 @@ const signup = async (req, res, next) => {
   const createdUser = new User({
     name,
     email,
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png',
+    image: req.file.path,
     password,
-    places: []
+    places: [],
   });
 
   try {
@@ -68,7 +67,6 @@ const signup = async (req, res, next) => {
   res.status(201).json({ user: createdUser.toObject({ getters: true }) });
 };
 
-// Handler for user login
 const login = async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -78,7 +76,7 @@ const login = async (req, res, next) => {
     existingUser = await User.findOne({ email: email });
   } catch (err) {
     const error = new HttpError(
-      'Logging in failed, please try again later.',
+      'Loggin in failed, please try again later.',
       500
     );
     return next(error);
