@@ -21,7 +21,7 @@ const Auth = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
-  // Initialize form state and form input handler
+  // Form state management using the useForm custom hook
   const [formState, inputHandler, setFormData] = useForm(
     {
       email: {
@@ -36,10 +36,10 @@ const Auth = () => {
     false
   );
 
-  // Switch between login and signup mode
+  // Switch between login and signup modes
   const switchModeHandler = () => {
     if (!isLoginMode) {
-      // Clear name and image fields when switching to login mode
+      // Clear the name and image fields when switching to login mode
       setFormData(
         {
           ...formState.inputs,
@@ -49,7 +49,7 @@ const Auth = () => {
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
     } else {
-      // Reset form state when switching to signup mode
+      // Clear the form and reset validation when switching to signup mode
       setFormData(
         {
           ...formState.inputs,
@@ -68,13 +68,13 @@ const Auth = () => {
     setIsLoginMode(prevMode => !prevMode);
   };
 
-  // Handle form submission
+  // Handle the form submission
   const authSubmitHandler = async event => {
     event.preventDefault();
 
     if (isLoginMode) {
-      // Login mode: Send email and password to authenticate user
       try {
+        // Send login request and obtain user ID and token
         const responseData = await sendRequest(
           'http://localhost:5000/api/users/login',
           'POST',
@@ -86,12 +86,14 @@ const Auth = () => {
             'Content-Type': 'application/json'
           }
         );
-        // Update authentication context with user ID
-        auth.login(responseData.user.id);
-      } catch (err) {}
+        // Call the login function in the auth context with the returned user ID and token
+        auth.login(responseData.userId, responseData.token);
+      } catch (err) {
+        // Error handling
+      }
     } else {
-      // Signup mode: Send email, password, name, and image to create new user
       try {
+        // Send signup request and obtain user ID and token
         const formData = new FormData();
         formData.append('email', formState.inputs.email.value);
         formData.append('name', formState.inputs.name.value);
@@ -103,9 +105,11 @@ const Auth = () => {
           formData
         );
 
-        // Update authentication context with user ID
-        auth.login(responseData.user.id);
-      } catch (err) {}
+        // Call the login function in the auth context with the returned user ID and token
+        auth.login(responseData.userId, responseData.token);
+      } catch (err) {
+        // Error handling
+      }
     }
   };
 

@@ -16,11 +16,8 @@ import { AuthContext } from '../../shared/context/auth-context';
 import './PlaceForm.css';
 
 const NewPlace = () => {
-  // Access the auth context and HTTP client hook
-  const auth = useContext(AuthContext);
-  const { isLoading, error, sendRequest, clearError } = useHttpClient();
-
-  // Initialize form state and input handler
+  const auth = useContext(AuthContext); // Access the authentication context
+  const { isLoading, error, sendRequest, clearError } = useHttpClient(); // HTTP client hook for sending requests
   const [formState, inputHandler] = useForm(
     {
       title: {
@@ -43,25 +40,20 @@ const NewPlace = () => {
     false
   );
 
-  const history = useHistory();
+  const history = useHistory(); // Access the browser history object
 
-  // Submit handler for creating a new place
   const placeSubmitHandler = async event => {
     event.preventDefault();
     try {
-      // Create a new FormData object and append form data
       const formData = new FormData();
       formData.append('title', formState.inputs.title.value);
       formData.append('description', formState.inputs.description.value);
       formData.append('address', formState.inputs.address.value);
-      formData.append('creator', auth.userId);
       formData.append('image', formState.inputs.image.value);
-
-      // Send a POST request to create a new place
-      await sendRequest('http://localhost:5000/api/places', 'POST', formData);
-
-      // Redirect to the home page
-      history.push('/');
+      await sendRequest('http://localhost:5000/api/places', 'POST', formData, {
+        Authorization: 'Bearer ' + auth.token // Include the authentication token in the request headers
+      });
+      history.push('/'); // Redirect to the main page after successful submission
     } catch (err) {}
   };
 

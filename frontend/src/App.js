@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -13,28 +13,15 @@ import UpdatePlace from './places/pages/UpdatePlace';
 import Auth from './user/pages/Auth';
 import MainNavigation from './shared/components/Navigation/MainNavigation';
 import { AuthContext } from './shared/context/auth-context';
+import { useAuth } from './shared/hooks/auth-hook';
 
 const App = () => {
-  // Set initial state for user authentication
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userId, setUserId] = useState(false);
-
-  // Login function to update authentication state
-  const login = useCallback(uid => {
-    setIsLoggedIn(true);
-    setUserId(uid);
-  }, []);
-
-  // Logout function to update authentication state
-  const logout = useCallback(() => {
-    setIsLoggedIn(false);
-    setUserId(null);
-  }, []);
+  const { token, login, logout, userId } = useAuth(); // Custom hook to handle authentication
 
   let routes;
 
-  // Define routes based on user authentication status
-  if (isLoggedIn) {
+  if (token) {
+    // If user is authenticated, show the following routes
     routes = (
       <Switch>
         <Route path="/" exact>
@@ -53,6 +40,7 @@ const App = () => {
       </Switch>
     );
   } else {
+    // If user is not authenticated, show the following routes
     routes = (
       <Switch>
         <Route path="/" exact>
@@ -72,15 +60,16 @@ const App = () => {
   return (
     <AuthContext.Provider
       value={{
-        isLoggedIn: isLoggedIn,
+        isLoggedIn: !!token, // Convert token to boolean value
+        token: token,
         userId: userId,
         login: login,
         logout: logout
       }}
     >
       <Router>
-        <MainNavigation />
-        <main>{routes}</main>
+        <MainNavigation /> {/* Render the navigation */}
+        <main>{routes}</main> {/* Render the routes */}
       </Router>
     </AuthContext.Provider>
   );

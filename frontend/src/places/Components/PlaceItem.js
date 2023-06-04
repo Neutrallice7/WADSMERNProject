@@ -11,54 +11,41 @@ import { useHttpClient } from '../../shared/hooks/http-hook';
 import './PlaceItem.css';
 
 const PlaceItem = props => {
-  // Access the auth context and HTTP client hook
-  const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
-
-  // Manage state for showing the map and delete confirmation modal
+  const auth = useContext(AuthContext);
   const [showMap, setShowMap] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  // Event handler for opening the map
-  const openMapHandler = () => {
-    setShowMap(true);
-  };
+  // Handlers to open/close the map modal
+  const openMapHandler = () => setShowMap(true);
+  const closeMapHandler = () => setShowMap(false);
 
-  // Event handler for closing the map
-  const closeMapHandler = () => {
-    setShowMap(false);
-  };
-
-  // Event handler for showing the delete confirmation modal
+  // Handlers to show/hide the delete confirmation modal
   const showDeleteWarningHandler = () => {
     setShowConfirmModal(true);
   };
-
-  // Event handler for canceling the delete operation
   const cancelDeleteHandler = () => {
     setShowConfirmModal(false);
   };
-
-  // Event handler for confirming the delete operation
   const confirmDeleteHandler = async () => {
     setShowConfirmModal(false);
     try {
       await sendRequest(
         `http://localhost:5000/api/places/${props.id}`,
-        'DELETE'
+        'DELETE',
+        null,
+        {
+          Authorization: 'Bearer ' + auth.token
+        }
       );
       props.onDelete(props.id);
     } catch (err) {}
   };
 
-  console.log(props.image);
-
   return (
     <React.Fragment>
-      {/* Render the error modal */}
       <ErrorModal error={error} onClear={clearError} />
-
-      {/* Render the map modal */}
+      {/* Map Modal */}
       <Modal
         show={showMap}
         onCancel={closeMapHandler}
@@ -68,12 +55,10 @@ const PlaceItem = props => {
         footer={<Button onClick={closeMapHandler}>CLOSE</Button>}
       >
         <div className="map-container">
-          {/* Render the map */}
           <Map center={props.coordinates} zoom={16} />
         </div>
       </Modal>
-
-      {/* Render the delete confirmation modal */}
+      {/* Delete Confirmation Modal */}
       <Modal
         show={showConfirmModal}
         onCancel={cancelDeleteHandler}
@@ -95,37 +80,30 @@ const PlaceItem = props => {
           can't be undone thereafter.
         </p>
       </Modal>
-
-      {/* Render the place item */}
+      {/* Place Item */}
       <li className="place-item">
         <Card className="place-item__content">
-          {/* Render the loading spinner */}
           {isLoading && <LoadingSpinner asOverlay />}
-
           <div className="place-item__image">
-            {/* Render the place item's image */}
-            <img src={`http://localhost:5000/${props.image}`} alt={props.title} />
+            <img
+              src={`http://localhost:5000/${props.image}`}
+              alt={props.title}
+            />
           </div>
-
           <div className="place-item__info">
-            {/* Render the place item's title, address, and description */}
             <h2>{props.title}</h2>
             <h3>{props.address}</h3>
             <p>{props.description}</p>
           </div>
-
           <div className="place-item__actions">
-            {/* Render the action buttons */}
             <Button inverse onClick={openMapHandler}>
               VIEW ON MAP
             </Button>
-
-            {/* Render the edit button for the creator */}
+            {/* Render edit button only for the creator of the place */}
             {auth.userId === props.creatorId && (
               <Button to={`/places/${props.id}`}>EDIT</Button>
             )}
-
-            {/* Render the delete button for the creator */}
+            {/* Render delete button only for the creator of the place */}
             {auth.userId === props.creatorId && (
               <Button danger onClick={showDeleteWarningHandler}>
                 DELETE

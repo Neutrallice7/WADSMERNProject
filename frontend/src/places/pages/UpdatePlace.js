@@ -15,7 +15,6 @@ import { useHttpClient } from '../../shared/hooks/http-hook';
 import { AuthContext } from '../../shared/context/auth-context';
 import './PlaceForm.css';
 
-// Component for updating a place
 const UpdatePlace = () => {
   const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
@@ -23,7 +22,7 @@ const UpdatePlace = () => {
   const placeId = useParams().placeId;
   const history = useHistory();
 
-  // Form state and input handlers
+  // Initialize the form state using the useForm custom hook
   const [formState, inputHandler, setFormData] = useForm(
     {
       title: {
@@ -45,6 +44,7 @@ const UpdatePlace = () => {
           `http://localhost:5000/api/places/${placeId}`
         );
         setLoadedPlace(responseData.place);
+        // Pre-fill the form with the existing place data
         setFormData(
           {
             title: {
@@ -63,7 +63,7 @@ const UpdatePlace = () => {
     fetchPlace();
   }, [sendRequest, placeId, setFormData]);
 
-  // Handler for submitting the updated place
+  // Handle form submission
   const placeUpdateSubmitHandler = async event => {
     event.preventDefault();
     try {
@@ -75,14 +75,16 @@ const UpdatePlace = () => {
           description: formState.inputs.description.value
         }),
         {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + auth.token
         }
       );
+      // Redirect to the user's places page after successful update
       history.push('/' + auth.userId + '/places');
     } catch (err) {}
   };
 
-  // Render loading spinner if the request is in progress
+  // Render loading spinner if data is still loading
   if (isLoading) {
     return (
       <div className="center">
@@ -91,7 +93,7 @@ const UpdatePlace = () => {
     );
   }
 
-  // Render error message if the place is not found
+  // Render error message if place is not found or there's an error
   if (!loadedPlace && !error) {
     return (
       <div className="center">
@@ -102,12 +104,12 @@ const UpdatePlace = () => {
     );
   }
 
-  // Render the place update form
   return (
     <React.Fragment>
       <ErrorModal error={error} onClear={clearError} />
       {!isLoading && loadedPlace && (
         <form className="place-form" onSubmit={placeUpdateSubmitHandler}>
+          {/* Title Input */}
           <Input
             id="title"
             element="input"
@@ -119,6 +121,7 @@ const UpdatePlace = () => {
             initialValue={loadedPlace.title}
             initialValid={true}
           />
+          {/* Description Input */}
           <Input
             id="description"
             element="textarea"
@@ -129,6 +132,7 @@ const UpdatePlace = () => {
             initialValue={loadedPlace.description}
             initialValid={true}
           />
+          {/* Submit Button */}
           <Button type="submit" disabled={!formState.isValid}>
             UPDATE PLACE
           </Button>
