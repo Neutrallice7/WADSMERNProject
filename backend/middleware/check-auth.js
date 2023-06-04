@@ -13,7 +13,7 @@ module.exports = (req, res, next) => {
       throw new Error('Authentication failed!');
     }
 
-    const decodedToken = jwt.verify(token, 'supersecret_dont_share'); // Verify and decode the token using the secret key
+    const decodedToken = jwt.verify(token, process.env.JWT_KEY); // Verify and decode the token using the secret key
     req.userData = { userId: decodedToken.userId }; // Attach the user ID from the decoded token to the request object
     next(); // Continue to the next middleware or route handler
   } catch (err) {

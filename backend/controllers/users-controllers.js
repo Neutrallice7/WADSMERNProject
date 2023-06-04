@@ -83,7 +83,7 @@ const signup = async (req, res, next) => {
   try {
     token = jwt.sign(
       { userId: createdUser.id, email: createdUser.email }, // Create a JWT token containing the user ID and email
-      'supersecret_dont_share', // Secret key used for signing the token
+      process.env.JWT_KEY, // Secret key used for signing the token
       { expiresIn: '1h' } // Expiration time of the token (1 hour in this case)
     );
   } catch (err) {
@@ -146,7 +146,7 @@ const login = async (req, res, next) => {
   try {
     token = jwt.sign(
       { userId: existingUser.id, email: existingUser.email }, // Create a JWT token containing the user ID and email
-      'supersecret_dont_share', // Secret key used for signing the token
+      process.env.JWT_KEY, // Secret key used for signing the token
       { expiresIn: '1h' } // Expiration time of the token (1 hour in this case)
     );
   } catch (err) {
