@@ -57,7 +57,7 @@ app.use((error, req, res, next) => {
 // Connect to MongoDB and start the server
 mongoose
   .connect(
-    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@custard.le00nl1.mongodb.net/${process.env.DB_NAME}`
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@custard.le00nl1.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority/`
   )
   .then(() => {
     app.listen(process.env.PORT || 5000);
