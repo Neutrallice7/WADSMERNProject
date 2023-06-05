@@ -15,28 +15,33 @@ app.use(bodyParser.json());
 
 // Serve static files from the "uploads/images" directory
 app.use('/uploads/images', express.static(path.join('uploads', 'images')));
+app.use(express.static(path.join('public')));
 
 // Set headers for CORS
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-  );
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+//   res.setHeader(
+//     'Access-Control-Allow-Headers',
+//     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+//   );
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE');
 
-  next();
-});
+//   next();
+// });
 
 // Routes
 app.use('/api/places', placesRoutes);
 app.use('/api/users', usersRoutes);
 
-// Error handling for invalid routes
 app.use((req, res, next) => {
-  const error = new HttpError('Could not find this route.', 404);
-  throw error;
+  res.sendFile(path.resolve(__dirname, 'public', 'index.html'));
 });
+
+// // Error handling for invalid routes
+// app.use((req, res, next) => {
+//   const error = new HttpError('Could not find this route.', 404);
+//   throw error;
+// });
 
 // Error handling middleware
 app.use((error, req, res, next) => {
